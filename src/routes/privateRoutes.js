@@ -1,0 +1,1 @@
+// here we will define which routes need JWT token implemented in middleware/tokenValidation.js
