@@ -22,3 +22,5 @@ $ npm run dev
 ```
 
 The project uses Nodemon, which means the server will automatically restart every time a change is made in any file.
+
+Felipe Azócar
