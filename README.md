@@ -1,6 +1,6 @@
 ## Project name - TODO
 ## Project description - TODO
-## Prerequisites
+## Prerequisites.
 
 Before you proceed with the installation, please [download and install Node.js](https://nodejs.org/en/download/).
 
