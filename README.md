@@ -28,3 +28,4 @@ The project uses Nodemon, which means the server will automatically restart ever
 Cinthya Calbete
 Jose Dominguez
 Hipólito Cayupi
+Felipe Azócar
