@@ -29,3 +29,4 @@ Cinthya Calbete
 Jose Dominguez
 Hipólito Cayupi
 Felipe Azócar
+Jonathan Ruiz
