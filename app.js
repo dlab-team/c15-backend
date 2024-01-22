@@ -4,6 +4,12 @@ import cors from 'cors'
 import dotenv from 'dotenv';
 dotenv.config();
 
+import { database } from './src/config/database.js';
+
+database.authenticate()
+    .then(()=> console.log('Base de datos conectada...'))
+    .catch(err=> console.log('Error: '+err));
+
 // Express server creation
 const app = express();
 
