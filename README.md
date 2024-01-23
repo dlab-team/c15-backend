@@ -1,6 +1,6 @@
 ## Project name - TODO
 ## Project description - TODO
-## Prerequisites
+## Prerequisites.
 
 Before you proceed with the installation, please [download and install Node.js](https://nodejs.org/en/download/).
 
@@ -28,3 +28,5 @@ The project uses Nodemon, which means the server will automatically restart ever
 Cinthya Calbete
 Jose Dominguez
 Hipólito Cayupi
+Felipe Azócar
+Jonathan Ruiz
