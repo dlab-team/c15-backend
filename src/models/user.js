@@ -50,6 +50,7 @@ const User = database.define('User',{
     timestamps: false, 
 }); 
 
-User.hasMany(Role, {foreignKey: 'id_role', targetKey: 'id'});
+//Relación N-1: Usuario pertenece a un Role
+User.belongsTo(Role, {foreignKey: 'id_role', targetKey: 'id'});
 
 export{User}
