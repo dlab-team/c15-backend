@@ -1,14 +1,16 @@
-import {Sequelize} from "sequelize";
+import { Sequelize } from "sequelize";
 
-const namedb = 'mydb';
+// Esto debería ir en .env después
+const name = 'mydb';
 const username = 'postgres';
 const password = 'admin';
-const host = 'localhost';
+const host = 'postgresdb';
+const port = 5432;
 
-const database= new Sequelize(namedb, username, password, {
+const database = new Sequelize(name, username, password, {
     host: host,
     dialect: 'postgres',
-    port: 5432,
-  });
+    port: port
+});
 
-export { database};
+export { database };

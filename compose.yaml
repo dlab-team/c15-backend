@@ -1,0 +1,40 @@
+# Recordar colocar variables de entorno en .env
+services:
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    # env_file: ./.env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=mydb
+    ports:
+      - 5433:5432
+    volumes:
+      - db:/var/lib/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+    build: .
+    restart: unless-stopped
+    # env_file: ./.env
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=postgresdb
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+      - DB_NAME=mydb
+      - DB_PORT=5432
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
