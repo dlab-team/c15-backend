@@ -1,11 +1,10 @@
 import { Sequelize } from "sequelize";
 
-// Esto debería ir en .env después
-const name = 'mydb';
-const username = 'postgres';
-const password = 'admin';
-const host = 'postgresdb';
-const port = 5432;
+const name = process.env.POSTGRES_DATABASE;
+const username = process.env.POSTGRES_USER;
+const password = process.env.POSTGRES_PASSWORD;
+const host = process.env.POSTGRES_HOST;
+const port = process.env.POSTGRES_DOCKER_PORT;
 
 const database = new Sequelize(name, username, password, {
     host: host,
