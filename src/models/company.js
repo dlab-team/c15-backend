@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { database } from '../config/database.js';
-import { User } from '../models/user.js';
+import { User } from './user.js';
 import { CompanyType } from './company_type.js';
 
 const Company = database.define('Company', {
@@ -28,5 +28,11 @@ const Company = database.define('Company', {
             key: 'id'
         }
     }
+}, { tableName: 'company', timestamps: false });
 
-});
+//Relación N-1: Company pertenece a un User
+Company.belongsTo(User, { foreignKey: 'id_user', targetKey: 'id' });
+//Relación N-1: Company pertenece a un CompanyType
+Company.belongsTo(CompanyType, { foreignKey: 'id_company', targetKey: 'id' });
+
+export { Company }
