@@ -20,7 +20,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // Port configuration
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.NODE_DOCKER_PORT || 3000);
 
 // Route files configuration
 app.use(routes);
