@@ -1,9 +1,5 @@
 import { Sequelize } from "sequelize";
 
-const database = new Sequelize(process.env.POSTGRES_DATABASE, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
-    host: 'postgresdb',
-    port: process.env.POSTGRES_DOCKER_PORT,
-    dialect: 'postgres'
-});
+const database = new Sequelize(process.env.POSTGRES_URI);
 
 export { database };
