@@ -1,5 +1,3 @@
-import { DataTypes } from "sequelize";
-
 export default (database) => {
     const Diagnostic = database.define('Diagnostic', { }, {
         timestamps: true
