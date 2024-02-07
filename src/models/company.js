@@ -30,5 +30,3 @@ const Company = database.define('Company', {
     }
 
 });
-
-export { Company };
