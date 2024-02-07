@@ -32,7 +32,9 @@ const Company = database.define('Company', {
 }, { tableName: 'company', timestamps: false });
 
 
-Company.hasMany(User, { foreignKey: 'id_user', targetKey: 'id' });
-Company.hasOne(CompanyType, { foreignKey: 'id_company', targetKey: 'id' });
+//Relación N-1: Company pertenece a un User
+Company.belongsTo(User,{foreignKey:'id_user', targetKey: 'id'});
+//Relación N-1: Company pertenece a un CompanyType
+Company.belongsTo(CompanyType,{foreignKey:'id_company', targetKey: 'id'});
 
 export { Company }
