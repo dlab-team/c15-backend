@@ -16,7 +16,12 @@ class UserController {
 
     async getUserById(idUser) {
         try {
-          const user = await User.findByPk(idUser);
+          const user = await User.findByPk(idUser,{
+            include:{
+              model:models.Role,
+              as:'role'
+            }
+          });
     
           if (!user) {
             throw new Error('Usuario no encontrado por id');
@@ -61,7 +66,11 @@ class UserController {
     
     async  getAllUsers(){
         try {
-            const users = await User.findAll();
+            const users = await User.findAll({
+              include:{
+                model:models.Role,
+                as:'role'
+            }});
             return users;
         } catch (error) {
             console.error('Error al obtener información de los usuarios:', error);

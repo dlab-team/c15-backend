@@ -1,16 +1,16 @@
 import {DataTypes} from 'sequelize';
 
 export default (database)=>{
-    const CompanyType = database.define('company_type',{
-        type:{
+    const BlogPost = database.define('blog_post',{
+        title:{
             type:DataTypes.STRING,
             allowNull: false
         },
-        description:{
-            type:DataTypes.STRING,
+        content:{
+            type:DataTypes.TEXT,
             allowNull: false
         },
     }, {timestamps: false});
 
-return CompanyType;
+return BlogPost;
 }
