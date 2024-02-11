@@ -9,7 +9,8 @@ module.exports = {
       lastName: "User",
       phone: "+56 9 12345678",
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      RoleId: 1
     }])
   },
 
