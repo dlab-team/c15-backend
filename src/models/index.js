@@ -1,10 +1,14 @@
-import { database } from "../config/database.js";
-import useBcrypt from "sequelize-bcrypt";
+import { Sequelize } from 'sequelize'
+import useBcrypt from 'sequelize-bcrypt';
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Importar modelos
 import userModel from "./user.js";
 
+const database = new Sequelize(process.env.POSTGRES_URI);
 const models = {
-    User: userModel(database)
+  User: userModel(database)
 };
 
 // Encriptar contraseñas
@@ -21,4 +25,5 @@ await database.sync({ force: true })
     console.log("Failed to sync db: " + err.message);
     });
 
-export { models };
+models.database = database;
+export default models;

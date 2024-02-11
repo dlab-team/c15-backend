@@ -1,0 +1,10 @@
+{
+    "//comment start": "=====================================================",
+    "//line1": "Las migraciones creadas por Sequelize CLI estan en formato",
+    "//line2": "CommonJS, mientras que el resto de la aplicacion esta en",
+    "//line3": "formato ECMAScript (ES module)",
+    "//line4": "Este archivo es necesario para que Sequelize pueda ejecutar",
+    "//line5": "las migraciones",
+    "//comment end": "=======================================================",
+    "type": "commonjs"
+}
