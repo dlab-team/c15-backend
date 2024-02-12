@@ -1,14 +1,24 @@
-import { database } from "../config/database.js";
-import useBcrypt from "sequelize-bcrypt";
+import { Sequelize } from 'sequelize'
+import useBcrypt from 'sequelize-bcrypt';
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Importar modelos
 import userModel from "./user.js";
+import roleModel from "./role.js";
 
+const database = new Sequelize(process.env.POSTGRES_URI);
 const models = {
-    User: userModel(database)
+  User: userModel(database),
+  Role: roleModel(database)
 };
 
 // Encriptar contraseñas
 useBcrypt(models.User);
+
+// Crear asociaciones
+import associations from './associations.js';
+associations(models);
 
 // Sincronizar todos los modelos
 // { force = true } borra la base de datos y luego la vuelve a sincronizar.
@@ -21,4 +31,5 @@ await database.sync({ force: true })
     console.log("Failed to sync db: " + err.message);
     });
 
-export { models };
+models.database = database;
+export default models;
