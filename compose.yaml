@@ -12,7 +12,7 @@ services:
     volumes:
       - db:/var/lib/postgres
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}" ]
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DATABASE}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -27,7 +27,7 @@ services:
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
-      - DB_HOST=$POSTGRES_HOST
+      - DB_HOST=postgresdb
       - DB_USER=$POSTGRES_USER
       - DB_PASSWORD=$POSTGRES_PASSWORD
       - DB_NAME=$POSTGRES_DATABASE

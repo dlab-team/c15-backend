@@ -4,14 +4,7 @@ import cors from 'cors';
 import userRouter from './src/routes/userRoutes.js';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-
 dotenv.config();
-
-import {database} from './src/config/database.js';
-
-database.authenticate()
-    .then(()=> console.log('Base de datos conectada...'))
-    .catch(err=> console.log('Error: '+err));
 
 // Express server creation
 const app = express();
@@ -20,7 +13,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // Port configuration
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.NODE_DOCKER_PORT || 3000);
 
 // Route files configuration
 app.use(routes);

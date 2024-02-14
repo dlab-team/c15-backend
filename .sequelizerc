@@ -1,0 +1,9 @@
+var path = require('path')
+require('dotenv').config();
+
+module.exports = {
+  'models-path': path.resolve("src", "models"),
+  'migrations-path': path.resolve("src", "migrations"),
+  'seeders-path': path.resolve("src", "seeders"),
+  'url': process.env.POSTGRES_URI,
+}

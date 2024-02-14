@@ -1,4 +1,3 @@
-
 export default (models)=>{
 
     //Asociación 1-N Modelo User y Blog Post

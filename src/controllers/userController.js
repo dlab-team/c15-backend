@@ -1,5 +1,5 @@
-import { models } from "../models/index.js";
-const User = models.User;
+import models from "../models/index.js";
+const { User } = models;
 
 class UserController {
 
@@ -22,7 +22,6 @@ class UserController {
               as:'role'
             }
           });
-    
           if (!user) {
             throw new Error('Usuario no encontrado por id');
           }

@@ -1,5 +1,8 @@
-import { database } from "../config/database.js";
-import useBcrypt from "sequelize-bcrypt";
+import { Sequelize } from 'sequelize'
+import useBcrypt from 'sequelize-bcrypt';
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Importar modelos
 import userModel from "./user.js";
 import questionModel from './question.js';
@@ -16,6 +19,8 @@ import blogPostModel from './blog_post.js';
 //Asociaciones
 import associations from "./associations.js";
 
+
+const database = new Sequelize(process.env.POSTGRES_URI);
 const models = {
     User:userModel(database),
     Pillar:pillarModel(database),
@@ -37,6 +42,10 @@ associations(models);
 // Encriptar contraseñas
 useBcrypt(models.User);
 
+// Crear asociaciones
+import associations from './associations.js';
+associations(models);
+
 // Sincronizar todos los modelos
 // { force = true } borra la base de datos y luego la vuelve a sincronizar.
 // Útil para desarrollo, remover en producción
@@ -48,4 +57,5 @@ await database.sync({ force: true })
     console.log("Failed to sync db: " + err.message);
     });
 
-export {models};  
+models.database = database;
+export default models;

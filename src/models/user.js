@@ -19,7 +19,6 @@ export default (database) => {
         },
         password:{
             type:DataTypes.STRING,
-            allowNull: false
         }
       
     });

@@ -15,3 +15,4 @@ export default (database)=>{
 
     return Role;
 }
+
