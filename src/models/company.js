@@ -1,38 +1,12 @@
-import { DataTypes } from 'sequelize';
-import { database } from '../config/database.js';
-import { User } from './user.js';
-import { CompanyType } from './company_type.js';
+import {DataTypes} from 'sequelize';
 
-const Company = database.define('Company', {
-    id: {
-        type: DataTypes.NUMBER,
-        primaryKey: true,
-        allowNull: true,
-        autoIncrement: true
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    id_user: {
-        type: DataTypes.NUMBER,
-        references: {
-            model: User,
-            key: 'id'
+export default (database)=>{
+    const Company = database.define('Company',{
+        name:{
+            type:DataTypes.STRING,
+            allowNull: false
         }
-    },
-    id_company: {
-        type: DataTypes.NUMBER,
-        references: {
-            model: CompanyType,
-            key: 'id'
-        }
-    }
-}, { tableName: 'company', timestamps: false });
+    },{tableName:'company',timestamps: false});
 
-//Relación N-1: Company pertenece a un User
-Company.belongsTo(User, { foreignKey: 'id_user', targetKey: 'id' });
-//Relación N-1: Company pertenece a un CompanyType
-Company.belongsTo(CompanyType, { foreignKey: 'id_company', targetKey: 'id' });
-
-export { Company }
+    return Company;
+}

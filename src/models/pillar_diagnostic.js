@@ -1,13 +1,12 @@
-import { DataTypes } from "sequelize";
+import {DataTypes} from 'sequelize';
 
-export default (database) => {
-    const PillarDiagnostic = database.define('Pillar_diagnostic', {
-        score: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+export default (database)=>{
+    const PillarDiagnostic = database.define('Pillar_diagnostic',{
+        score:{
+            type:DataTypes.DOUBLE,
+            allowNull:false
         }
-    }, {
-        timestamps: true
-    });
-    return PillarDiagnostic;
-};
+    }, {tableName:'pillar_diagnostic',timestamps: false});
+
+return PillarDiagnostic;
+}

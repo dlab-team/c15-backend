@@ -9,6 +9,6 @@ export default (database) => {
         description: {
             type: DataTypes.STRING
         }
-    }, {});
+    }, {tableName:'role',timestamps:false});
     return Role;
 };

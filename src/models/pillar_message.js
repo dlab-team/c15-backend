@@ -1,13 +1,16 @@
-import { DataTypes } from "sequelize";
+import {DataTypes} from 'sequelize';
 
-export default (database) => {
-    const PillarMessage = database.define('Pillar_message', {
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
+export default (database)=>{
+    const PillarMesssage = database.define('Pillar_message',{
+        score_limit:{
+            type:DataTypes.DOUBLE,
+            allowNull:false
+        },
+        message:{
+            type:DataTypes.TEXT,
+            allowNull:false
         }
-    }, {
-        timestamps: true
-    });
-    return PillarMessage;
-};
+    }, {tableName:'pillar_message',timestamps: false});
+
+return PillarMesssage;
+}

@@ -1,7 +1,11 @@
 import express from 'express';
 import routes from './src/routes/routes.js';
 import cors from 'cors';
-import userRouter from './src/routes/userRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
+import answerRoutes from './src/routes/answeRoutes.js';
+import questionRoutes from './src/routes/questionRoutes.js';
+import optionRoutes from './src/routes/optionRoutes.js';
+import diagnosticRoutes from './src/routes/diagnosticRoutes.js';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -17,7 +21,11 @@ app.set('port', process.env.NODE_DOCKER_PORT || 3000);
 
 // Route files configuration
 app.use(routes);
-app.use(userRouter);
+app.use(userRoutes);
+app.use(answerRoutes);
+app.use(questionRoutes);
+app.use(optionRoutes);
+app.use(diagnosticRoutes);
 
 // Data type configuration
 app.use(express.json());
