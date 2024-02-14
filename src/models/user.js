@@ -1,26 +1,27 @@
 import { DataTypes } from "sequelize";
 
 export default (database) => {
-    const User = database.define('User', {
-        email: {
-            type: DataTypes.STRING,
+    const User = database.define('User',{
+        name:{
+            type:DataTypes.STRING,
             allowNull: false
         },
-        password: {
-            type: DataTypes.STRING,
+        last_name:{
+            type:DataTypes.STRING,
             allowNull: false
         },
-        firstName: {
-            type: DataTypes.STRING,
+        phone:{
+            type:DataTypes.INTEGER
+        },
+        email:{
+            type:DataTypes.STRING,
             allowNull: false
         },
-        lastName: {
-            type: DataTypes.STRING,
+        password:{
+            type:DataTypes.STRING,
             allowNull: false
-        },
-        phone: {
-            type: DataTypes.STRING
         }
-    }, {});
+      
+    },{tableName:'user'});
     return User;
 };

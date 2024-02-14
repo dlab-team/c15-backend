@@ -5,12 +5,33 @@ dotenv.config();
 
 // Importar modelos
 import userModel from "./user.js";
-import roleModel from "./role.js";
+import questionModel from './question.js';
+import pillarModel from './pillar.js';
+import pillarDiagnosticModel from './pillar_diagnostic.js';
+import pillarMessageModel from './pillar_message.js';
+import optionModel from './option.js';
+import diagnosticModel from './diagnostic.js';
+import companyModel from './company.js';
+import companyTypeModel from './company_type.js';
+import answerModel from './answer.js';
+import roleModel from './role.js';
+import blogPostModel from './blog_post.js';
 
 const database = new Sequelize(process.env.POSTGRES_URI);
+
 const models = {
-  User: userModel(database),
-  Role: roleModel(database)
+  User:userModel(database),
+  Pillar:pillarModel(database),
+  CompanyType:companyTypeModel(database),
+  Company:companyModel(database),
+  Diagnostic:diagnosticModel(database),
+  PillarDiagnostic:pillarDiagnosticModel(database),
+  PillarMessage:pillarMessageModel(database),
+  Role:roleModel(database),
+  Option:optionModel(database),
+  Question:questionModel(database),
+  Answer:answerModel(database),
+  BlogPost:blogPostModel(database)
 };
 
 // Encriptar contraseñas
@@ -23,13 +44,14 @@ associations(models);
 // Sincronizar todos los modelos
 // { force = true } borra la base de datos y luego la vuelve a sincronizar.
 // Útil para desarrollo, remover en producción
-await database.sync({ force: true })
+await database.sync({ force: false })
     .then(() => {
     console.log("Drop and re-sync db.")
     })
     .catch((err) => {
-    console.log("Failed to sync db: " + err.message);
+    console.log("Failed to sync db: " + err);
     });
+    
 
 models.database = database;
 export default models;
