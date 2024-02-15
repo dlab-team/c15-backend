@@ -22,14 +22,14 @@ const database = new Sequelize(process.env.POSTGRES_URI);
 const models = {
   User:userModel(database),
   Pillar:pillarModel(database),
+  Question:questionModel(database),
+  Option:optionModel(database),
   CompanyType:companyTypeModel(database),
   Company:companyModel(database),
   Diagnostic:diagnosticModel(database),
   PillarDiagnostic:pillarDiagnosticModel(database),
   PillarMessage:pillarMessageModel(database),
   Role:roleModel(database),
-  Option:optionModel(database),
-  Question:questionModel(database),
   Answer:answerModel(database),
   BlogPost:blogPostModel(database)
 };

@@ -2,6 +2,7 @@ import express from 'express';
 import routes from './src/routes/routes.js';
 import cors from 'cors';
 import userRoutes from './src/routes/userRoutes.js';
+import questionnaireRoutes from './src/routes/questionnaireRoutes.js';
 //import answerRoutes from './src/routes/answeRoutes.js';
 //import questionRoutes from './src/routes/questionRoutes.js';
 //import optionRoutes from './src/routes/optionRoutes.js';
@@ -22,6 +23,7 @@ app.set('port', process.env.NODE_DOCKER_PORT || 3000);
 // Route files configuration
 app.use(routes);
 app.use(userRoutes);
+app.use(questionnaireRoutes);
 //app.use(answerRoutes);
 //app.use(questionRoutes);
 //app.use(optionRoutes);
