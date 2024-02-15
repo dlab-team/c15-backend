@@ -7,11 +7,24 @@ Before you proceed with the installation, please [download and install Node.js](
 Dependencies installation is done using the [`npm init` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
 
 ```bash
-$ npm init
+$ npm install
 ```
 ## Settings
 
-Create a .env file in the root of the repository with the variable PORT={number} (the port must match the one configured in the frontend repository).
+Create a .env file in the root of the repository from .env.example (the port must match with the one configured in the frontend repository).
+
+
+## You can run the application in a containerized database
+
+For containerized database run (open docker desktop in background):
+``` docker-compose up ```
+
+(If you need to do any settings changes, you will need to run docker-compose down to apply changes, and then docker-compose up --build)
+
+## Fill up the database with the seeders (in the backend terminal through docker desktop):
+
+``` npx sequelize db:seed:all ``` 
+
 
 ## Quick Start
 
