@@ -91,7 +91,7 @@ module.exports = {
       {
         id: 15, score_limit: 10.0, message: "El resultado indica que el Desarrollo de Equipos es eficiente, sin embargo es posible mejorar su condición" +
           " actual. Se sugiere establecer estrategias claras y prácticas clave que pueden contribuir al desarrollo" +
-          " eficiente de los equipos en términos de comunicación, metas y roles, con vista al éxito de la organización.", id_pillar: 4
+          " eficiente de los equipos en términos de comunicación, metas y roles, con vista al éxito de la organización.", id_pillar: 3
       },
       {
         id: 16, score_limit: 5.0, message: "Este resultado puede indicar un impacto significativo en el rendimiento y la eficacia. La falta de comunicación," +
