@@ -6,6 +6,7 @@ import answerRoutes from './src/routes/answeRoutes.js';
 //import questionRoutes from './src/routes/questionRoutes.js';
 //import optionRoutes from './src/routes/optionRoutes.js';
 import diagnosticRoutes from './src/routes/diagnosticRoutes.js';
+
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(answerRoutes);
 //app.use(questionRoutes);
 //app.use(optionRoutes);
 app.use(diagnosticRoutes);
+
 
 // Data type configuration
 app.use(express.json());
