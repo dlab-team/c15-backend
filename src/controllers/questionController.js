@@ -1,13 +1,11 @@
-import Question from './../models/question.js'
-export const create = async (questionText, pillarId) => {
-    console.log(Question);
+import  models from '../models/index.js'
+const question = models.Question
+export const createQuestion = async (questionText, pillarId) => {
     try {
-       const newQuestion = await Question.create({
+       const newQuestion = await question.create({
         question: questionText, fk_id_pillar: pillarId
     });
-       res.status(201).json({
-        message: `Question ${newQuestion.id} successfully created`  
-    });
+      return newQuestion
     } catch (error) {
         throw new Error(error);
     }
