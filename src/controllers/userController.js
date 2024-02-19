@@ -1,73 +1,83 @@
 import models from "../models/index.js";
 const { User } = models;
 
-class UserController {
+// GET = Index usuarios (solo admin)
+async function index(req, res) {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+    // Missing admin authentication
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  };
+};
 
-    async createUser(dataUser) {
-        try {
+// GET {:id} = Ver usuario
+async function read(req, res) {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    console.log(user);
+    res.json(user);
+    // Missing authentication
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  };
+};
 
-          const newUser = await User.create(dataUser);
-          return newUser;
-        } catch (error) {
-          console.error('Error al crear un nuevo usuario:', error);
-          throw error;
-        }
-      }
+// POST = Crear usuario
+async function create(req, res) {
+  // Validación a nivel de controlador (es necesaria?)
+  if(!req.body.name || !req.body.email || !req.body.password || !req.body.last_name) {
+    return res.status(400).json({ message: 'Error 400: Bad Request' });
+  }
+  try {
+    const newUser = await User.create(req.body);
+    res.json(newUser);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  };
+};
 
-    async getUserById(idUser) {
-        try {
-          const user = await User.findByPk(idUser);
+// PUT {:id} = Editar usuario
+async function update(req, res) {
+  // Validación a nivel de controlador (es necesaria?)
+  if(req.body.name == '' || req.body.email == '' || req.body.password == '' || req.body.last_name == '') {
+    return res.status(400).json({ message: 'Error 400: Bad Request' });
+  }
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    user.update(req.body);
+    res.json(user);
+    // Missing authentication
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  };
+};
 
-          if (!user) {
-            throw new Error('Usuario no encontrado por id');
-          }
-          return user;
-        } catch (error) {
-          console.error(`Error al obtener usuario por ID (${idUser}):`, error);
-          throw error;
-        }
-      }
+// DELETE {:id} = Eliminar usuario
+async function destroy(req, res) {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    user.destroy();
+    res.json({ message: 'User deleted successfully' });
+    // Missing authentication
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  };
+};
 
-    async updateUser(idUser, data) {
-        try {
-          const user = await User.findByPk(idUser);
-          if (!user) {
-            throw new Error('Usuario no encontrado para actualizar');
-          }
-          await user.update(data);
-          return user;
-        } catch (error) {
-          console.error(`Error al actualizar usuario por ID (${idUser}):`, error);
-          throw error;
-        }
-      }
-
-    async deleteUser(idUser) {
-        try {
-          const user = await User.findByPk(idUser);
-    
-          if (!user) {
-            throw new Error('Usuario no encontrado para eliminar');
-          }
-
-          await user.destroy();
-    
-          return { message: 'Usuario eliminado correctamente' };
-        } catch (error) {
-          console.error(`Error al eliminar usuario por ID (${idUser}):`, error);
-          throw error;
-        }
-      }
-    
-    async  getAllUsers(){
-        try {
-            const users = await User.findAll();
-            return users;
-        } catch (error) {
-            console.error('Error al obtener información de los usuarios:', error);
-            throw error;
-        }
-    }
-}
-
-export default UserController;
+export default {
+  index,
+  create,
+  read,
+  update,
+  destroy
+};
