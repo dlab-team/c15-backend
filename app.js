@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import routes from './src/routes/index.js';
 dotenv.config();
 
 // Express server creation
@@ -14,8 +15,8 @@ app.use(bodyParser.json());
 app.set('port', process.env.NODE_DOCKER_PORT || 3000);
 
 // Set up routes
-import routes from './src/routes/index.js';
 routes(app);
+
 
 // Data type configuration
 app.use(express.json());
