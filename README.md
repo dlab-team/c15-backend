@@ -9,26 +9,45 @@ Dependencies installation is done using the [`npm init` command](https://docs.np
 ```bash
 $ npm install
 ```
-## Settings
+## Setting up the environment variables
 
-Create a .env file in the root of the repository from .env.example (the port must match with the one configured in the frontend repository).
+Create a .env file in the root of the project using .env.example as a base. The values inside .env.example can be used as is, but it is recommended to change them in production.
 
+**Remember the port must match with the one configured in the frontend repository!**
 
-## You can run the application in a containerized database
+## Setting up a Postgres docker container
 
-For containerized database run (open docker desktop in background):
-``` docker-compose up ```
+### From the command line
 
-(If you need to do any settings changes, you will need to run docker-compose down to apply changes, and then docker-compose up --build)
+```bash
+$ docker run --name c15-database --env-file ./.env -p 5433:5432 -d postgres:latest
+```
 
-## Fill up the database with the seeders (in the backend terminal through docker desktop):
+This command will create a container using the latest image of Postgres with the user and password defined in the .env file. After creating it you can start this container with `docker start c15-database`.
 
-``` npx sequelize db:seed:all ``` 
+### From docker desktop
 
+Run your Postgres image and in the optional settings add these variables:
 
-## Quick Start
+**Make sure they match the ones you have in your .env file!**
 
-Run the following command and wait to see "Server running, port: {number}" in the console.
+![Postgres optional settings](/readme/postgres_docker_desktop.webp)
+
+## Seed the database
+
+To seed the database with placeholder values you can use this command:
+
+```bash
+$ npx sequelize db:seed:all
+```
+
+Currently when you launch the app it will drop all the tables in the database before creating them from scratch, you can change this behavior by going to index.js and removing `{ force: false }` from `database.sync()`.
+
+The application uses [Sequelize CLI](https://github.com/sequelize/cli) to manage migrations and seeds, you can check its documentation to get started.
+
+## Start the app (development)
+
+Run the following command and wait until you see `The Express application is running on port:####` in the terminal.
 
 ```bash
 $ npm run dev

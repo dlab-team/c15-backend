@@ -1,9 +1,11 @@
 var path = require('path')
 require('dotenv').config();
 
+var connection_string = process.env.POSTGRES_URI || `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DATABASE}`;
+
 module.exports = {
   'models-path': path.resolve("src", "models"),
   'migrations-path': path.resolve("src", "migrations"),
   'seeders-path': path.resolve("src", "seeders"),
-  'url': process.env.POSTGRES_URI,
+  'url': connection_string,
 }
