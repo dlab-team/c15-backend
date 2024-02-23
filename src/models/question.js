@@ -5,6 +5,10 @@ export default (database) =>{
         question:{
             type:DataTypes.STRING,
             allowNull:false
+        },
+        id_pillar: {
+            type: DataTypes.INTEGER,
+            allowNull: true 
         }
     }, {tableName:'question',timestamps: false});
     
