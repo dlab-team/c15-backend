@@ -8,7 +8,6 @@ async function index(req, res) {
     res.json(users);
     // Missing admin authentication
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
@@ -18,11 +17,9 @@ async function read(req, res) {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) { return res.status(404).json({ message: 'User not found' }) }
-    console.log(user);
     res.json(user);
     // Missing authentication
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
@@ -30,14 +27,13 @@ async function read(req, res) {
 // POST = Crear usuario
 async function create(req, res) {
   // Validación a nivel de controlador (es necesaria?)
-  if(!req.body.name || !req.body.email || !req.body.password || !req.body.last_name) {
+  if(!req.body.email || !req.body.password || !req.body.first_name || !req.body.last_name) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
   try {
     const newUser = await User.create(req.body);
     res.json(newUser);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
@@ -55,7 +51,6 @@ async function update(req, res) {
     res.json(user);
     // Missing authentication
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
@@ -69,7 +64,6 @@ async function destroy(req, res) {
     res.json({ message: 'User deleted successfully' });
     // Missing authentication
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
