@@ -16,6 +16,7 @@ import companyTypeModel from './company_type.js';
 import answerModel from './answer.js';
 import roleModel from './role.js';
 import blogPostModel from './blog_post.js';
+import invalidTokenModel from './invalid_token.js'
 
 const connection_string = process.env.POSTGRES_URI || `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DATABASE}`;
 
@@ -33,7 +34,8 @@ const models = {
   PillarMessage:pillarMessageModel(database),
   Role:roleModel(database),
   Answer:answerModel(database),
-  BlogPost:blogPostModel(database)
+  BlogPost:blogPostModel(database),
+  InvalidToken: invalidTokenModel(database)
 };
 
 // Encriptar contraseñas
@@ -46,14 +48,13 @@ associations(models);
 // Sincronizar todos los modelos
 // { force = true } borra la base de datos y luego la vuelve a sincronizar.
 // Útil para desarrollo, remover en producción
-await database.sync({ force: false })
+await database.sync({ force: true })
     .then(() => {
     console.log("Drop and re-sync db.")
     })
     .catch((err) => {
     console.log("Failed to sync db: " + err);
     });
-    
 
 models.database = database;
 export default models;
