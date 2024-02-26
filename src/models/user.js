@@ -21,7 +21,6 @@ export default (database) => {
             type:DataTypes.STRING,
             allowNull: false
         }
-      
     },{tableName:'user'});
     return User;
 };
