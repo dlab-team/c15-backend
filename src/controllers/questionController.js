@@ -11,7 +11,7 @@ const pillarModel = models.Pillar
         });
         res.status(201).json({  message: `Question ${newQuestion.id} successfully created`  });
         } else {
-          return res.status(404).json({ success: false, message: "Required data is missing (question, id_pillar)" });
+          return res.status(400).json({ success: false, message: "Required data is missing (question, id_pillar)" });
        }
     } catch (error) {
         return next(error);
