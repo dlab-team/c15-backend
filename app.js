@@ -12,7 +12,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // Port configuration
-app.set('port', process.env.NODE_DOCKER_PORT || 3000);
+app.set('port', process.env.NODE_PORT || 3000);
 
 // Set up routes
 routes(app);
