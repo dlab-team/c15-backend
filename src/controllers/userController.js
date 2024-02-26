@@ -6,9 +6,7 @@ async function index(req, res) {
   try {
     const users = await User.findAll();
     res.json(users);
-    // Missing admin authentication
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
@@ -18,33 +16,27 @@ async function read(req, res) {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) { return res.status(404).json({ message: 'User not found' }) }
-    console.log(user);
     res.json(user);
-    // Missing authentication
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
 
 // POST = Crear usuario
 async function create(req, res) {
-  // Validación a nivel de controlador (es necesaria?)
-  if(!req.body.name || !req.body.email || !req.body.password || !req.body.last_name) {
+  if(!req.body.email || !req.body.password || !req.body.first_name || !req.body.last_name) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
   try {
     const newUser = await User.create(req.body);
-    res.json(newUser);
+    res.status(201).json(newUser);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
 
 // PUT {:id} = Editar usuario
 async function update(req, res) {
-  // Validación a nivel de controlador (es necesaria?)
   if(req.body.name == '' || req.body.email == '' || req.body.password == '' || req.body.last_name == '') {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
@@ -52,10 +44,8 @@ async function update(req, res) {
     const user = await User.findByPk(req.params.id);
     if (!user) { return res.status(404).json({ message: 'User not found' }) }
     user.update(req.body);
-    res.json(user);
-    // Missing authentication
+    res.status(204).end();
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
@@ -66,10 +56,8 @@ async function destroy(req, res) {
     const user = await User.findByPk(req.params.id);
     if (!user) { return res.status(404).json({ message: 'User not found' }) }
     user.destroy();
-    res.json({ message: 'User deleted successfully' });
-    // Missing authentication
+    res.status(204).end();
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   };
 };
