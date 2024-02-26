@@ -1,11 +1,18 @@
 import { Sequelize } from "sequelize";
 import models from "../models/index.js";
 const { BlogPost } = models;
+const { User } = models;
 
 // GET: Devuelve todos los post realizados
 async function index(req, res, next) {
     try {
-        const blogs = await BlogPost.findAll();
+        const blogs = await BlogPost.findAll({
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'last_name', 'email']
+            }],
+            order: [['createdAt', 'DESC']]
+        });
         res.json(blogs);
     } catch (error) {
         console.log(error);
@@ -30,7 +37,12 @@ async function create(req, res) {
 // GET + ID: Ver el contenido de un blog en específico
 async function read(req, res) {
     try {
-        const blog = await BlogPost.findByPk(req.params.id);
+        const blog = await BlogPost.findByPk(req.params.id, {
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'last_name', 'email']
+            }]
+        });
         if (!blog) {
             return res.status(404).json({ message: 'Blog not found' })
         }
@@ -63,13 +75,13 @@ async function update(req, res) {
 // DELETE + ID: Eliminar un blog en específico
 async function destroy(req, res) {
     try {
-      const blog = await BlogPost.findByPk(req.params.id);
-      if (!blog) { return res.status(404).json({ message: `Error blog not found` }) }
-      blog.destroy();
-      res.json({ message: 'Blog deleted successfully' });
+        const blog = await BlogPost.findByPk(req.params.id);
+        if (!blog) { return res.status(404).json({ message: `Error blog not found` }) }
+        blog.destroy();
+        res.json({ message: 'Blog deleted successfully' });
     } catch (error) {
-      res.status(400).json({ message: `Error: ${error.message}` });
+        res.status(400).json({ message: `Error: ${error.message}` });
     };
-  };
+};
 
 export default { index, create, read, update, destroy };
