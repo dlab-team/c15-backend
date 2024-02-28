@@ -1,7 +1,7 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default (database)=>{
-    const BlogPost = database.define('Blog_post',{
+    const BlogPost = database.define('Blog_Post',{
         title:{
             type:DataTypes.STRING,
             allowNull: false
@@ -10,7 +10,6 @@ export default (database)=>{
             type:DataTypes.TEXT,
             allowNull: false
         },
-    }, {tableName:'blog_post',timestamps: true});
-
+    }, {tableName:'blog_posts',timestamps: true});
 return BlogPost;
 }

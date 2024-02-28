@@ -1,4 +1,4 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default (database)=>{
     const Pillar = database.define('Pillar',{
@@ -6,7 +6,6 @@ export default (database)=>{
             type:DataTypes.STRING,
             allowNull:false
         }
-    }, {tableName:'pillar',timestamps: false});
-
+    }, {tableName:'pillars',timestamps: false});
 return Pillar;
 }
