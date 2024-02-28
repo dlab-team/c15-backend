@@ -14,15 +14,14 @@ app.use(bodyParser.json());
 // Port configuration
 app.set('port', process.env.NODE_PORT || 3000);
 
-// Set up routes
-routes(app);
-
-
 // Data type configuration
 app.use(express.json());
 app.use(express.urlencoded({  extended: true})
 );
 app.use(cors());
+
+// Set up routes
+routes(app);
 
 app.listen(app.get('port'), () => {
     console.log(`The Express application is running on port:${app.get('port')}`)
