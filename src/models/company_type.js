@@ -1,7 +1,7 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default (database)=>{
-    const CompanyType = database.define('Company_type',{
+    const CompanyType = database.define('Company_Type',{
         type:{
             type:DataTypes.STRING,
             allowNull: false
@@ -10,7 +10,6 @@ export default (database)=>{
             type:DataTypes.STRING,
             allowNull: false
         },
-    }, {tableName:'company_type',timestamps: false});
-
+    }, {tableName:'company_types',timestamps: false});
 return CompanyType;
 }

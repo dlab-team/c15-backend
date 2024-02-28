@@ -1,4 +1,4 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default (database)=>{
     const PillarMesssage = database.define('Pillar_message',{
@@ -10,7 +10,6 @@ export default (database)=>{
             type:DataTypes.TEXT,
             allowNull:false
         }
-    }, {tableName:'pillar_message',timestamps: false});
-
+    }, {tableName:'pillar_messages',timestamps: false});
 return PillarMesssage;
 }

@@ -1,15 +1,12 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default (database)=>{
     const Option = database.define('Option',{
-
-        number:{
+        order:{
             type:DataTypes.INTEGER,
             allowNull: false
         },
         answer:{
-            // Aca creo que en ves de String se deberia
-            // colocar un enum, queda a discusion
             type:DataTypes.STRING,
             allowNull: false
         },
@@ -17,7 +14,6 @@ export default (database)=>{
             type:DataTypes.DOUBLE,
             allowNull: false
         }
-    }, {tableName:'option',timestamps:false});
-
+    }, {tableName:'options',timestamps:false});
 return Option;
 }
