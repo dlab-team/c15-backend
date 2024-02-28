@@ -9,7 +9,7 @@ async function index(req, res, next) {
         const blogs = await BlogPost.findAll({
             include: [{
                 model: User,
-                attributes: ['id', 'name', 'last_name', 'email']
+                attributes: ['id', 'first_name', 'last_name', 'email']
             }],
             order: [['createdAt', 'DESC']]
         });
@@ -40,7 +40,7 @@ async function read(req, res) {
         const blog = await BlogPost.findByPk(req.params.id, {
             include: [{
                 model: User,
-                attributes: ['id', 'name', 'last_name', 'email']
+                attributes: ['id', 'first_name', 'last_name', 'email']
             }]
         });
         if (!blog) {
