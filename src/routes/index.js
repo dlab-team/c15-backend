@@ -4,7 +4,7 @@ import questionRoutes from './questionRoutes.js'
 import questionnaireRoutes from './questionnaireRoutes.js';
 import blogRoutes from './blogRoutes.js';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocumentation from './swagger/index.js';
+import swaggerDocumentation from '../swagger/index.js';
 
 export default (app) => {
     app.use('/users', userRouter);
