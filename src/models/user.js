@@ -1,4 +1,5 @@
 import { DataTypes } from "sequelize";
+import bcrypt from 'bcrypt';
 
 export default (database) => {
     const User = database.define('User',{
@@ -21,6 +22,16 @@ export default (database) => {
             type:DataTypes.STRING,
             allowNull: false
         }
-    }, {tableName:'users'});
+    }, {
+        tableName:'users',
+        hooks: {
+            beforeCreate: async(user) => {
+                user.password = bcrypt.hashSync(user.password, 12)
+            },
+            beforeUpdate: async(user) => {
+                user.password = bcrypt.hashSync(user.password, 12)
+            }
+        }
+    });
     return User;
 };

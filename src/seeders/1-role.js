@@ -9,6 +9,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('roles', null, { truncate: true, cascade: true });
+    await queryInterface.bulkDelete('roles', null, { truncate: true, cascade: true, restartIdentity: true });
   }
 };
