@@ -3,8 +3,7 @@ import { DataTypes } from 'sequelize';
 export default (database)=>{
     const Option = database.define('Option',{
         order:{
-            type:DataTypes.INTEGER,
-            allowNull: false
+            type:DataTypes.INTEGER
         },
         answer:{
             type:DataTypes.STRING,
@@ -14,6 +13,6 @@ export default (database)=>{
             type:DataTypes.DOUBLE,
             allowNull: false
         }
-    }, {tableName:'options',timestamps:false});
+    }, { tableName: 'options', timestamps: false });
 return Option;
 }

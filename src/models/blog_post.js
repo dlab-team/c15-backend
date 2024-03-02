@@ -10,6 +10,6 @@ export default (database)=>{
             type:DataTypes.TEXT,
             allowNull: false
         },
-    }, {tableName:'blog_posts',timestamps: true});
+    }, { tableName: 'blog_posts' });
 return BlogPost;
 }

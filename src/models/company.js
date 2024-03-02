@@ -6,6 +6,6 @@ export default (database)=>{
             type:DataTypes.STRING,
             allowNull: false
         }
-    },{tableName:'companies',timestamps: false});
+    },{ tableName: 'companies' });
     return Company;
 }
