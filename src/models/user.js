@@ -5,25 +5,50 @@ export default (database) => {
     const User = database.define('User',{
         first_name:{
             type:DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                is: {
+                    args: /^[\p{LC} ]+$/u,
+                    msg: "Name can only contain letters and spaces"
+                }
+            }
         },
         last_name:{
             type:DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                is: {
+                    args: /^[\p{LC} ]+$/u,
+                    msg: "Name can only contain letters and spaces"
+                }
+            }
         },
         phone:{
-            type:DataTypes.INTEGER
+            type:DataTypes.STRING,
+            validate: {
+                isMobilePhone: {
+                    args: 'any',
+                    msg: "Not a valid phone number (include country code)"
+                }
+            }
         },
         email:{
             type:DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: {
+                    args: true,
+                    msg: "Not a valid email"
+                }
+            }
         },
         password:{
             type:DataTypes.STRING,
             allowNull: false
         }
     }, {
-        tableName:'users',
+        tableName: 'users',
         hooks: {
             beforeCreate: async(user) => {
                 user.password = bcrypt.hashSync(user.password, 12)
