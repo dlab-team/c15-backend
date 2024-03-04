@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import models from "../models/index.js";
 const { User, InvalidToken } = models;
 import dotenv from 'dotenv';
@@ -13,7 +14,8 @@ async function login(req, res) {
     if (!user) {
       return res.status(401).json({ message: 'Authentication failed' });
     };
-    if (user.authenticate(req.body.password)) {
+    const login = bcrypt.compareSync(req.body.password, user.password);
+    if (login) {
       const token = jwt.sign(
         { sub: user.id },
         process.env.JWT_SECRET,

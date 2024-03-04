@@ -1,4 +1,4 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default (database) =>{
     const Question = database.define('Question',{
@@ -6,8 +6,6 @@ export default (database) =>{
             type:DataTypes.STRING,
             allowNull:false
         }
-    }, {tableName:'question',timestamps: false});
-    
+    }, {tableName:'questions',timestamps: false});
 return Question;
 };
-
