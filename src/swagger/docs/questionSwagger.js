@@ -21,7 +21,7 @@
 
 /**
  * @swagger
- * /questions:
+ * /question:
  *   post:
  *     summary: Create a new question
  *     tags: [Questions]
@@ -48,7 +48,7 @@
 
 /**
  * @swagger
- * /questions/{id}:
+ * /question/{id}:
  *   get:
  *     summary: Get a specific question by ID
  *     tags: [Questions]
@@ -64,7 +64,7 @@
  *         description: Details of the question
  *         content:
  *           application/json:
- *             $ref: '#/definitions/Question'
+ *              example: { question: 'What is your favorite animal?', id_pillar: 1 }
  *       404:
  *         description: Question not found
  *         content:
@@ -74,7 +74,7 @@
 
 /**
  * @swagger
- * /questions/{id}:
+ * /question/{id}:
  *   put:
  *     summary: Update a question by ID
  *     tags: [Questions]
@@ -113,7 +113,7 @@
 
 /**
  * @swagger
- * /questions/{id}:
+ * /question/{id}:
  *   delete:
  *     summary: Delete a question by ID
  *     tags: [Questions]

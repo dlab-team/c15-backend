@@ -5,7 +5,7 @@ const diagnosticRoutes = Router();
 const processDiagnosticController = new  ProcessDiagnosticController();
 
 /**Obtener diagnóstico*/
-diagnosticRoutes.get('/diagnostic/process/:id', async (req, res) => {
+diagnosticRoutes.get('/process/:id', async (req, res) => {
   try {
     res.status(200).json(
      await processDiagnosticController.processDiagnostic(req.params.id)
