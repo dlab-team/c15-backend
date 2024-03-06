@@ -74,7 +74,7 @@ module.exports = {
           " más relevante y útil para la toma de decisiones estratégicas.", pillar_id: 3
       },
       {
-        score_limit: 1.6, message: "Este resultado podría significar que el indicador no está generando resultados significativos o no " *
+        score_limit: 1.6, message: "Este resultado podría significar que el indicador no está generando resultados significativos o no " +
           "está contribuyendo de manera efectiva a la evaluación del rendimiento. Es crucial revisar y ajustar su" +
           " definición, recolección de datos o incluso considerar la posibilidad de reemplazarlo con otro indicador" +
           " más relevante y útil para la toma de decisiones estratégicas.", pillar_id: 3
