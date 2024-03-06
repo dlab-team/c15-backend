@@ -3,11 +3,13 @@ import models from "../models/index.js";
 import multer from "multer";
 import upload from "../middleware/multerConfig.js";
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
 
 const { BlogPost } = models;
 const { User } = models;
 
-// GET: Devuelve todos los post realizados
 async function index(req, res, next) {
     try {
         const blogs = await BlogPost.findAll({
@@ -24,16 +26,26 @@ async function index(req, res, next) {
     };
 };
 
-// POST: Endpoint para crear un post
+async function getImage(req, res) {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const imageName = req.params.imageName;
+    const projectRoot = dirname(__dirname);
+    const imagePath = path.join(projectRoot, 'public', 'images', imageName);
+    res.sendFile(imagePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Image not found' });
+        }
+    });
+};
+
 async function create(req, res) {
     upload.single('image')(req, res, async (err) => {
         console.log(req.file)
-        // Acá verificamos si existe algun error que nos devuelve Multer al intentar cargar la imagen
         if (err instanceof multer.MulterError || !req.body.title || !req.body.content) {
             return res.status(400).json({ message: `Error 400: Bad Request - ${err ? err : "Title or content is empty."}` });
         }
         try {
-            // Si el usuario no envía imagen del blog, se le asignará automaticamente la imagen por defecto
             let imageFileName = req.file ? req.file.filename : 'default_image.jpeg';
             const newPost = await BlogPost.create({ ...req.body, image: imageFileName });
             res.json(newPost);
@@ -44,7 +56,6 @@ async function create(req, res) {
     });
 };
 
-// GET + ID: Ver el contenido de un blog en específico
 async function read(req, res) {
     try {
         const blog = await BlogPost.findByPk(req.params.id, {
@@ -64,7 +75,6 @@ async function read(req, res) {
     };
 };
 
-// PUT + ID: Editar blog
 async function update(req, res) {
     try {
         upload.single('image')(req, res, async (err) => {
@@ -75,7 +85,6 @@ async function update(req, res) {
             if (!blog) {
                 return res.status(404).json({ message: `Error blog not found` })
             }
-            // Si el cliente no quiere cambiar su imagen, esta se mantendrá
             await blog.update({ ...req.body, image: req.file ? req.file.filename : blog.image });
             await blog.update({ updatedAt: Sequelize.literal('NOW()') });
             res.json(blog);
@@ -85,7 +94,6 @@ async function update(req, res) {
     };
 };
 
-// DELETE + ID: Eliminar un blog en específico
 async function destroy(req, res) {
     try {
         const blog = await BlogPost.findByPk(req.params.id);
@@ -93,11 +101,9 @@ async function destroy(req, res) {
             return res.status(404).json({ message: `Error blog not found` })
         }
         const imagePath = `src/public/images/${blog.image}`;
-        // acá verificamos si la imagen es la "por defecto"
         const isDefaultImage = blog.image === 'default_image.jpeg';
-        // Si la imagen no es la imagen por defecto, eliminarla del servidor
         if (!isDefaultImage && fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath); // Eliminar el archivo de imagen
+            fs.unlinkSync(imagePath);
         }
         await blog.destroy();
         res.json({ message: 'Blog deleted successfully' });
@@ -106,4 +112,4 @@ async function destroy(req, res) {
     };
 };
 
-export default { index, create, read, update, destroy };
+export default { index, create, read, update, destroy, getImage };

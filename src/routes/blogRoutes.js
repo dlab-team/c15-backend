@@ -4,6 +4,7 @@ const router = express.Router();
 import blogController from '../controllers/blogController.js';
 
 router.get("/", blogController.index);
+router.get("/image/:imageName", blogController.getImage);
 router.post("/create", blogController.create);
 router.get("/:id", blogController.read)
 router.put("/:id", blogController.update)
