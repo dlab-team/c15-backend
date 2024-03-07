@@ -136,5 +136,3 @@
  *           application/json:
  *             example: { success: false, message: 'Question not found' }
  */
-
- export default {};
