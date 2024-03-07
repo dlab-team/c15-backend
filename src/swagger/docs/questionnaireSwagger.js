@@ -9,6 +9,7 @@
  * /questionnarie:
  *   get:
  *     summary: Get information about pillars with associated questions and options.
+ *     tags: [Questionnarie]
  *     description: This endpoint returns information about pillars along with their associated questions and options.
  *     responses:
  *       200:

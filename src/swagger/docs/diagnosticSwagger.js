@@ -9,6 +9,7 @@
 * /diagnostic/process/:id:
 *   get:
 *     summary: Get the latest diagnostic data for a company.
+*     tags: [Diagnostic]
 *     description: This endpoint retrieves the latest diagnostic data for a specific company.
 *     parameters:
 *       - in: path
