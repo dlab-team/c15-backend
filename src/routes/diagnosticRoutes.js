@@ -1,23 +1,8 @@
 import { Router } from 'express';
-import ProcessDiagnosticController from '../controllers/processDiagnosticController.js';
+import diagnostic from '../controllers/diagnosticController.js';
+const router = Router();
 
-const diagnosticRoutes = Router();
-const processDiagnosticController = new  ProcessDiagnosticController();
+router.post('/',diagnostic.create);
+router.get('/:id',diagnostic.read);
 
-/**Obtener diagnóstico*/
-diagnosticRoutes.get('/process/:id', async (req, res) => {
-  try {
-    res.status(200).json(
-     await processDiagnosticController.processDiagnostic(req.params.id)
-    );
-  } catch (error) {
-    console.error('Error processing diagnostic:', error);
-    res.status(500).json({
-      message: 'Error processing diagnosis: '+req.body,
-      error: error.message
-    });
-  }
-});
-
-
-export default diagnosticRoutes;
+export default router;

@@ -7,6 +7,7 @@ import diagnosticRoutes from './diagnosticRoutes.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocumentation from '../swagger/index.js';
 import pillarRoutes from './pillarRoutes.js'
+import optionRoutes from "./optionRoutes.js";
 
 export default (app) => {
     app.use('/users', userRouter);
@@ -17,5 +18,6 @@ export default (app) => {
     app.use('/diagnostic', diagnosticRoutes)
     app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
     app.use('/pillar', pillarRoutes)
-
+    app.use('/diagnostic', diagnosticRoutes);
+    app.use('/option', optionRoutes);
 };
