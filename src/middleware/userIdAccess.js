@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import models from "../models/index.js";
-const { InvalidToken } = models;
+const { User, InvalidToken } = models;
 
 async function userIdAccess (req, res, next) {
     try {
@@ -10,11 +10,13 @@ async function userIdAccess (req, res, next) {
             where: { token: token },
             attributes: ['token']
         });
-        if (invalidToken) {
-            return res.status(401).json({ message: 'Unauthorized' });
+        const user = await User.findByPk(req.params.id, { attributes: ['password_date'] });
+        const password_date = Math.floor(user.password_date.getTime()/1000)
+        if (invalidToken || decoded.iat < password_date) {
+            return res.status(401).json({ message: 'Error 401: Unauthorized' });
         };
         if (req.params.id != decoded.sub) {
-            return res.status(403).json({ message: 'Forbidden' });
+            return res.status(403).json({ message: 'Error 403: Forbidden' });
         };
         next();
     } catch (error) {

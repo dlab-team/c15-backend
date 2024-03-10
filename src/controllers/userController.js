@@ -1,7 +1,8 @@
 import models from "../models/index.js";
 const { User } = models;
+import bcrypt from 'bcrypt';
 
-// GET = Index usuarios (solo admin)
+// GET = Index users
 async function index(req, res) {
   try {
     const users = await User.findAll();
@@ -11,18 +12,18 @@ async function index(req, res) {
   };
 };
 
-// GET {:id} = Ver usuario
+// GET {:id} = Read user
 async function read(req, res) {
   try {
     const user = await User.findByPk(req.params.id);
-    if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     res.json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
   };
 };
 
-// POST = Crear usuario
+// POST = Create user
 async function create(req, res) {
   if(!req.body.email || !req.body.password || !req.body.first_name || !req.body.last_name) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
@@ -35,14 +36,14 @@ async function create(req, res) {
   };
 };
 
-// PUT {:id} = Editar usuario
+// PUT {:id} = Update user
 async function update(req, res) {
-  if(req.body.name == '' || req.body.email == '' || req.body.password == '' || req.body.last_name == '') {
+  if(req.body.first_name == '' || req.body.last_name == '' || req.body.email == '' || 'password' in req.body) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
   try {
     const user = await User.findByPk(req.params.id);
-    if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     user.update(req.body);
     res.status(204).end();
   } catch (error) {
@@ -50,12 +51,35 @@ async function update(req, res) {
   };
 };
 
-// DELETE {:id} = Eliminar usuario
+// DELETE {:id} = Delete user
 async function destroy(req, res) {
   try {
     const user = await User.findByPk(req.params.id);
-    if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     user.destroy();
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  };
+};
+
+// PUT {:id}/password = Change password
+async function change_password(req, res) {
+  if(!req.body.new_password || !req.body.old_password || req.body.new_password == req.body.old_password) {
+    return res.status(400).json({ message: 'Error 400: Bad Request' });
+  }
+  try {
+    const user = await User.findByPk(req.params.id, {
+      attributes: ['id', 'password', 'password_date']
+    });
+    if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
+    if (!bcrypt.compareSync(req.body.old_password, user.password)) {
+      return res.status(401).json({ message: 'Error 401: Unauthorized' });
+    }
+    user.update({
+      password: req.body.new_password,
+      password_date: Date()
+    });
     res.status(204).end();
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -67,5 +91,6 @@ export default {
   create,
   read,
   update,
-  destroy
+  destroy,
+  change_password
 };

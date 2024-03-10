@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 export default (database) => {
     const User = database.define('User',{
         first_name:{
-            type:DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 is: {
@@ -14,7 +14,7 @@ export default (database) => {
             }
         },
         last_name:{
-            type:DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 is: {
@@ -24,7 +24,7 @@ export default (database) => {
             }
         },
         phone:{
-            type:DataTypes.STRING,
+            type: DataTypes.STRING,
             validate: {
                 isMobilePhone: {
                     args: 'any',
@@ -33,7 +33,7 @@ export default (database) => {
             }
         },
         email:{
-            type:DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             unique: true,
             validate: {
@@ -44,7 +44,12 @@ export default (database) => {
             }
         },
         password:{
-            type:DataTypes.STRING,
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        password_date:{
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
             allowNull: false
         }
     }, {

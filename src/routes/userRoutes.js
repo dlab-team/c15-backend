@@ -8,5 +8,6 @@ router.get('/:id', userIdAccess, userController.read);
 router.post('/', userController.create);
 router.put('/:id', userIdAccess, userController.update);
 router.delete('/:id', userIdAccess, userController.destroy);
+router.put('/:id/password', userIdAccess, userController.change_password);
 
 export default router;
