@@ -9,7 +9,7 @@
  * /blog:
  *   post:
  *     summary: Create a new blog
- *     tags: [Blogs]
+ *     tags: [Blog]
  *     requestBody:
  *       description: Blog data
  *       required: true

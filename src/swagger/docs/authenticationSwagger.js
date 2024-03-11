@@ -1,13 +1,14 @@
 /**
  * @swagger
  * tags:
- *   name: Login/logout
+ *   name: Authentication
  *   description: Endpoints for managing authentication
  *//**
  * @swagger
  * /auth/login:
  *   post:
  *     summary: Authenticate user and generate JWT token.
+ *     tags: [Authentication]
  *     description: This endpoint authenticates the user and returns a JWT token if authentication is successful.
  *     requestBody:
  *       required: true
@@ -46,6 +47,7 @@
  * /auth/logout:
  *   post:
  *     summary: Invalidate JWT token and log the user out.
+ *     tags: [Authentication]
  *     description: This endpoint invalidates the provided JWT token, logging the user out.
  *     security:
  *       - bearerAuth: []
