@@ -17,6 +17,6 @@ export default (app) => {
     app.use('/blog', blogRoutes)
     app.use('/diagnostic', diagnosticRoutes)
     app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
-    app.use('/pillar', pillarRoutes);
+    app.use('/pillar', pillarRoutes)
     app.use('/option', optionRoutes);
 };
