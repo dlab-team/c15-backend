@@ -2,7 +2,7 @@ import { Router } from 'express';
 import ProcessDiagnosticController from '../controllers/processDiagnosticController.js';
 
 const answerRoutes = Router();
-const processDiagnosticController = new  ProcessDiagnosticController();
+const processDiagnosticController = new ProcessDiagnosticController();
 
 
 /**Guarda un nueva respuesta */

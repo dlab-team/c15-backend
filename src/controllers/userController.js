@@ -1,5 +1,5 @@
 import models from "../models/index.js";
-const { User } = models;
+const { User, CompanyType, Company } = models;
 import bcrypt from 'bcrypt';
 
 // GET = Index users
@@ -25,20 +25,31 @@ async function read(req, res) {
 
 // POST = Create user
 async function create(req, res) {
-  if(!req.body.email || !req.body.password || !req.body.first_name || !req.body.last_name) {
+  if (!req.body.email || !req.body.password || !req.body.first_name || !req.body.last_name) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
+  const t = await models.database.transaction();
   try {
-    const newUser = await User.create(req.body);
+    const newUser = await User.create(req.body, { transaction: t });
+    const newCompany = await Company.create({
+      name: req.body.company_name,
+      user_id: newUser.id
+    }, { transaction: t });
+
+    const companyType = await CompanyType.findOne({ where: { id: req.body.company_type_id } });
+    await newCompany.setCompany_Type(companyType, { transaction: t });
+    await t.commit();
     res.status(201).json(newUser);
   } catch (error) {
+    console.log(error)
+    await t.rollback();
     res.status(400).json({ message: error.message });
   };
 };
 
 // PUT {:id} = Update user
 async function update(req, res) {
-  if(req.body.first_name == '' || req.body.last_name == '' || req.body.email == '' || 'password' in req.body) {
+  if (req.body.first_name == '' || req.body.last_name == '' || req.body.email == '' || 'password' in req.body) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
   try {
@@ -65,7 +76,7 @@ async function destroy(req, res) {
 
 // PUT {:id}/password = Change password
 async function change_password(req, res) {
-  if(!req.body.new_password || !req.body.old_password || req.body.new_password == req.body.old_password) {
+  if (!req.body.new_password || !req.body.old_password || req.body.new_password == req.body.old_password) {
     return res.status(400).json({ message: 'Error 400: Bad Request' });
   }
   try {
