@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import models from "../models/index.js";
 const { User, InvalidToken } = models;
 
-async function userIdAccess (req, res, next) {
+async function validateUserId(req, res, next) {
     try {
         const token = req.header("authorization");
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -24,4 +24,22 @@ async function userIdAccess (req, res, next) {
     }
 };
 
-export default userIdAccess;
+async function validateRecovery (req, res, next) {
+    try {
+        const token = req.header("authorization");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findByPk(decoded.sub, { attributes: ['password_date'] });
+        const password_date = Math.floor(user.password_date.getTime()/1000)
+        if (!decoded.recovery || decoded.iat < password_date) {
+            return res.status(401).json({ message: 'Error 401: Unauthorized' });
+        };
+        next();
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+};
+
+export {
+    validateUserId,
+    validateRecovery
+};
