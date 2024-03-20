@@ -25,6 +25,7 @@ export default (database) => {
         },
         phone:{
             type: DataTypes.STRING,
+            allowNull: true,
             validate: {
                 isMobilePhone: {
                     args: 'any',

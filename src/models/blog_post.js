@@ -11,8 +11,12 @@ export default (database) => {
             allowNull: false
         },
         image: {
-            type: DataTypes.STRING, // Almacenará el nombre del archivo de imagen
+            type: DataTypes.STRING,
             allowNull: true
+        },
+        author: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
     }, { tableName: 'blog_posts', timestamps: true });
     return BlogPost;
