@@ -5,7 +5,12 @@ import bcrypt from 'bcrypt';
 // GET = Index users
 async function index(req, res) {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [{
+        model: Company,
+        include: [CompanyType]
+      }]
+    });
     res.json(users);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -15,7 +20,12 @@ async function index(req, res) {
 // GET {:id} = Read user
 async function read(req, res) {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      include: [{
+        model: Company,
+        include: [CompanyType]
+      }]
+    });
     if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     res.json(user);
   } catch (error) {
@@ -31,7 +41,7 @@ async function create(req, res) {
   const t = await models.database.transaction();
   try {
     const newUser = await User.create(req.body, { transaction: t });
-    console.log(models.CompanyType.prototype)
+    // console.log(models.CompanyType.prototype)
     const newCompany = await newUser.createCompany({
       name: req.body.company_name
     }, { transaction: t });

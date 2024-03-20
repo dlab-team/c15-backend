@@ -7,8 +7,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
 
-const { BlogPost } = models;
-const { User } = models;
+const { BlogPost, User } = models;
 
 async function index(req, res, next) {
     try {
@@ -41,7 +40,8 @@ async function getImage(req, res) {
 
 async function create(req, res) {
     upload.single('image')(req, res, async (err) => {
-        console.log(req.file)
+        // console.log(req.file)
+        console.log(req.body)
         if (err instanceof multer.MulterError || !req.body.title || !req.body.content) {
             return res.status(400).json({ message: `Error 400: Bad Request - ${err ? err : "Title or content is empty."}` });
         }
