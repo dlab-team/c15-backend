@@ -31,13 +31,16 @@ async function create(req, res) {
   const t = await models.database.transaction();
   try {
     const newUser = await User.create(req.body, { transaction: t });
-    const newCompany = await Company.create({
-      name: req.body.company_name,
-      user_id: newUser.id
+    console.log(models.CompanyType.prototype)
+    const newCompany = await newUser.createCompany({
+      name: req.body.company_name
     }, { transaction: t });
 
-    const companyType = await CompanyType.findOne({ where: { id: req.body.company_type_id } });
-    await newCompany.setCompany_Type(companyType, { transaction: t });
+    if (req.body.company_type_id) {
+      const companyType = await CompanyType.findOne({ where: { id: req.body.company_type_id } });
+      await newCompany.setCompany_Type(companyType, { transaction: t });
+    }
+
     await t.commit();
     res.status(201).json(newUser);
   } catch (error) {

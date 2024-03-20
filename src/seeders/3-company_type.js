@@ -7,6 +7,7 @@ module.exports = {
       { type: "Pequeña Empresa", description: "Ingresos anuales desde 2.400 UF a 25.000 UF" },
       { type: "Mediana Empresa", description: "Ingresos anuales desde 25.000 UF a 100.000 UF" },
       { type: "Gran Empresa", description: "Ingresos anuales desde 100.000 UF  y más" },
+      { type: "No lo tengo claro", description: "No se tiene claridad del tipo de compañía." },
     ]);
   },
 

@@ -51,6 +51,10 @@ export default (database) => {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
             allowNull: false
+        },
+        active:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     }, {
         tableName: 'users',

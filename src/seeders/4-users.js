@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('users', [
-      { first_name: "Elena", last_name: "Martínez", email: "elena@example.com", password: bcrypt.hashSync("password1", 12), password_date: new Date(), phone: "123456789", createdAt: new Date(2024, 1, 7), updatedAt: new Date(2024, 1, 7), role_id: 1 },
+      { first_name: "Elena", last_name: "Martínez", email: "elena@example.com", password: bcrypt.hashSync("password1", 12), password_date: new Date(), phone: "123456789", active: true, createdAt: new Date(2024, 1, 7), updatedAt: new Date(2024, 1, 7), role_id: 1 },
       { first_name: "Juan", last_name: "García", email: "juan@example.com", password: bcrypt.hashSync("password2", 12), password_date: new Date(), phone: "987654321", createdAt: new Date(2024, 1, 8), updatedAt: new Date(2024, 1, 8), role_id: 1 },
       { first_name: "Sofía", last_name: "López", email: "sofia@example.com", password: bcrypt.hashSync("password3", 12), password_date: new Date(), phone: "555555555", createdAt: new Date(2024, 1, 9), updatedAt: new Date(2024, 1, 9), role_id: 2 },
       { first_name: "Alejandro", last_name: "Rodríguez", email: "alejandro@example.com", password: bcrypt.hashSync("password4", 12), password_date: new Date(), phone: "777777777", createdAt: new Date(2024, 1, 10), updatedAt: new Date(2024, 1, 10), role_id: 1 },
