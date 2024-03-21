@@ -1,6 +1,7 @@
 import models from "../models/index.js";
 const { User, CompanyType, Company } = models;
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 // GET = Index users
 async function index(req, res) {
@@ -52,6 +53,15 @@ async function create(req, res) {
     }
 
     await t.commit();
+
+    const token = jwt.sign(
+      { sub: newUser.id, activation: true },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+    // this should go in an email
+    console.log(`activation token: ${token}`);
+
     res.status(201).json(newUser);
   } catch (error) {
     console.log(error)
@@ -101,7 +111,7 @@ async function change_password(req, res) {
       return res.status(401).json({ message: 'Error 401: Unauthorized' });
     }
     user.update({
-      password: req.body.new_password,
+      password: bcrypt.hashSync(req.body.new_password, 12),
       password_date: Date()
     });
     res.status(204).end();

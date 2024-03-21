@@ -9,7 +9,7 @@ export default (models)=>{
         foreignKey: {
             name: 'role_id',
             allowNull: false,
-            defaultValue: 1,
+            defaultValue: 3,
             onDelete: 'SET DEFAULT'
         }
     });
