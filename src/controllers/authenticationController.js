@@ -103,9 +103,12 @@ async function activate_user(req, res) {
       where: { token: token },
       attributes: ['token']
     });
+    if (!decoded.activation) {
+      return res.status(409).json({ message: 'Error 400: Bad Request' });
+    };
     if (invalidToken) {
       return res.status(409).json({ message: 'Error 409: Conflict' });
-    }
+    };
     if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     user.update({
       role_id: 1
