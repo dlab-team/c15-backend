@@ -25,7 +25,6 @@ export default (database) => {
         },
         phone:{
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isMobilePhone: {
                     args: 'any',
@@ -52,18 +51,11 @@ export default (database) => {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
             allowNull: false
-        },
-        active:{
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
         }
     }, {
         tableName: 'users',
         hooks: {
             beforeCreate: async(user) => {
-                user.password = bcrypt.hashSync(user.password, 12)
-            },
-            beforeUpdate: async(user) => {
                 user.password = bcrypt.hashSync(user.password, 12)
             }
         }

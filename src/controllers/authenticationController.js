@@ -83,9 +83,37 @@ async function reset_password(req, res) {
     });
     if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     user.update({
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 12),
       password_date: Date()
     });
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  };
+};
+
+async function activate_user(req, res) {
+  try {
+    const token = req.header("authorization");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.sub, {
+      attributes: ['id', 'role_id']
+    });
+    const invalidToken = await InvalidToken.findOne({
+      where: { token: token },
+      attributes: ['token']
+    });
+    if (!decoded.activation) {
+      return res.status(409).json({ message: 'Error 400: Bad Request' });
+    };
+    if (invalidToken) {
+      return res.status(409).json({ message: 'Error 409: Conflict' });
+    };
+    if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
+    user.update({
+      role_id: 1
+    });
+    InvalidToken.create({ token: token });
     res.status(204).end();
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -96,5 +124,6 @@ export default {
   login,
   logout,
   recovery_email,
-  reset_password
+  reset_password,
+  activate_user
 };
