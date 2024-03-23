@@ -9,7 +9,9 @@ const pillarModel = models.Pillar
            const newQuestion = await questionModel.create({
             question: question, pillar_id: pillar_id
         });
-        res.status(201).json({  message: `Question ${newQuestion.id} successfully created`  });
+        res.status(201).json({  
+            id:newQuestion.id,
+            message: `Question ${newQuestion.id} successfully created`});
         } else {
           return res.status(400).json({ success: false, message: "Required data is missing (question, pillar_id)" });
        }
