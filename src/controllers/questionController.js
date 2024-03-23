@@ -4,14 +4,14 @@ const pillarModel = models.Pillar
 
  async function create(req, res, next) {
     try {
-        const { question, id_pillar } = req.body;
-        if (question && id_pillar) {
+        const { question, pillar_id } = req.body;
+        if (question && pillar_id) {
            const newQuestion = await questionModel.create({
-            question: question, id_pillar: id_pillar
+            question: question, pillar_id: pillar_id
         });
         res.status(201).json({  message: `Question ${newQuestion.id} successfully created`  });
         } else {
-          return res.status(400).json({ success: false, message: "Required data is missing (question, id_pillar)" });
+          return res.status(400).json({ success: false, message: "Required data is missing (question, pillar_id)" });
        }
     } catch (error) {
         return next(error);
@@ -33,9 +33,9 @@ async function read(req, res, next){
 
 async function update(req, res, next) {
     try {
-        if(req.body.question == '' || req.body.id_pillar == '') return res.status(400).json({ message: 'Error 400: Bad Request' });
+        if(req.body.question == '' || req.body.pillar_id == '') return res.status(400).json({ message: 'Error 400: Bad Request' });
         const question = await questionModel.findByPk(req.params.id);
-        const pillar = await pillarModel.findByPk(req.body.id_pillar)
+        const pillar = await pillarModel.findByPk(req.body.pillar_id)
         if(question && pillar){ 
             questionModel.update(
                 req.body,
