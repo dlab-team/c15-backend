@@ -24,42 +24,48 @@ async function getOptionById(id, res) {
 
 async function create(req, res) {
   try {
+    let options = req.body;
 
-    const { order, answer, score, question_id } = req.body ?? {};
-
-    if (order != undefined && answer != undefined && score != undefined && question_id != undefined) {
-
-      const questionID = parseInt(req.body.question_id);
-
-      if (!Number.isInteger(questionID)) {
-        res.status(400).json({ success: false, message: "The parameter is not a valid id" });
-      } else {
-
-        const questionExist = await Question.findByPk(question_id);
-
-        if (questionExist) {
-          const newOption = await Option.create({
-            order: order,
-            answer: answer,
-            score: score,
-            question_id: question_id
-          });
-
-          res.status(200).json({ success: true, message: `Option ${newOption.id} successfully created` });
-        } else {
-          res.status(404).json({ success: false, message: "Question doesn't exist" });
-        }
-      }
-
-    } else {
-      res.status(400).json({ success: false, message: 'Required data for Option is missing' });
+    if(!Array.isArray(options)){
+      options = [options]
     }
 
-  } catch (error) {
-    return error;
-  }
-}
+    if(options.length === 0) {
+      return res.status(400).json({ success: false, message: 'No options provided' });
+    }
 
+    for (const optionData of options) {
+      const { order, answer, score, question_id } = optionData;
+
+      if (order === undefined || answer === undefined || score === undefined || question_id === undefined) {
+        return res.status(400).json({ success: false, message: 'One or more required fields are missing in an option' });
+      }
+
+      const questionID = parseInt(question_id)
+
+      if (!Number.isInteger(questionID)) {
+        return res.status(400).json({ success: false, message: "The parameter is not a valid id" });
+      }
+
+      const questionExist = await Question.findByPk(questionID);
+
+      if (!questionExist) {
+        return res.status(404).json({ success: false, message: "Question doesn't exist" });
+      }
+
+      await Option.create({
+        order: order,
+        answer: answer,
+        score: score,
+        question_id: questionID
+      });
+    }
+    res.status(200).json({ success: true, message: `Options successfully created` });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error });
+  }
+
+  }
 async function read(req, res) {
   try {
 
