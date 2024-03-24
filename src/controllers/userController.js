@@ -2,6 +2,10 @@ import models from "../models/index.js";
 const { User, CompanyType, Company } = models;
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import transporter from '../../mail.js';
+import html_template from '../../mail_template.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // GET = Index users
 async function index(req, res) {
@@ -59,8 +63,22 @@ async function create(req, res) {
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
-    // this should go in an email
-    console.log(`activation token: ${token}`);
+
+    const mail = {
+      from: process.env.MAIL_USER,
+      to: newUser.email,
+      subject: 'Activa tu cuenta',
+      text: token,
+      html: html_template(token)
+    }
+
+    transporter.sendMail(mail, (err, info) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("Activation mail sent successfully. ID: %s", info.messageId);
+    })
 
     res.status(201).json(newUser);
   } catch (error) {
