@@ -1,11 +1,17 @@
 import models from "../models/index.js";
 const { User, CompanyType, Company } = models;
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 // GET = Index users
 async function index(req, res) {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [{
+        model: Company,
+        include: [CompanyType]
+      }]
+    });
     res.json(users);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -15,7 +21,12 @@ async function index(req, res) {
 // GET {:id} = Read user
 async function read(req, res) {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      include: [{
+        model: Company,
+        include: [CompanyType]
+      }]
+    });
     if (!user) { return res.status(404).json({ message: 'Error 404: User not found' }) }
     res.json(user);
   } catch (error) {
@@ -31,14 +42,26 @@ async function create(req, res) {
   const t = await models.database.transaction();
   try {
     const newUser = await User.create(req.body, { transaction: t });
-    const newCompany = await Company.create({
-      name: req.body.company_name,
-      user_id: newUser.id
+    // console.log(models.CompanyType.prototype)
+    const newCompany = await newUser.createCompany({
+      name: req.body.company_name
     }, { transaction: t });
 
-    const companyType = await CompanyType.findOne({ where: { id: req.body.company_type_id } });
-    await newCompany.setCompany_Type(companyType, { transaction: t });
+    if (req.body.company_type_id) {
+      const companyType = await CompanyType.findOne({ where: { id: req.body.company_type_id } });
+      await newCompany.setCompany_Type(companyType, { transaction: t });
+    }
+
     await t.commit();
+
+    const token = jwt.sign(
+      { sub: newUser.id, activation: true },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+    // this should go in an email
+    console.log(`activation token: ${token}`);
+
     res.status(201).json(newUser);
   } catch (error) {
     console.log(error)
@@ -88,7 +111,7 @@ async function change_password(req, res) {
       return res.status(401).json({ message: 'Error 401: Unauthorized' });
     }
     user.update({
-      password: req.body.new_password,
+      password: bcrypt.hashSync(req.body.new_password, 12),
       password_date: Date()
     });
     res.status(204).end();

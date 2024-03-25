@@ -57,9 +57,6 @@ export default (database) => {
         hooks: {
             beforeCreate: async(user) => {
                 user.password = bcrypt.hashSync(user.password, 12)
-            },
-            beforeUpdate: async(user) => {
-                user.password = bcrypt.hashSync(user.password, 12)
             }
         }
     });
