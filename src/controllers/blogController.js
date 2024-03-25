@@ -41,7 +41,7 @@ async function getImage(req, res) {
 async function create(req, res) {
     upload.single('image')(req, res, async (err) => {
         // console.log(req.file)
-        console.log(req.body)
+        // console.log(req.body)
         if (err instanceof multer.MulterError || !req.body.title || !req.body.content) {
             return res.status(400).json({ message: `Error 400: Bad Request - ${err ? err : "Title or content is empty."}` });
         }
@@ -76,8 +76,10 @@ async function read(req, res) {
 };
 
 async function update(req, res) {
+    // console.log(req)
     try {
         upload.single('image')(req, res, async (err) => {
+            console.log(req.body)
             if (err instanceof multer.MulterError) {
                 return res.status(400).json({ message: `Error 400: Bad Request - ${err}` });
             }
