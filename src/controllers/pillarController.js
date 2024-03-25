@@ -1,5 +1,5 @@
 import  models from '../models/index.js'
-const pillarModel = models.Pillar
+const { Pillar: pillarModel, PillarMessage } = models;
 
 async function create(req, res, next) {
     try {
@@ -70,11 +70,71 @@ async function destroy(req, res, next){
     }
 }
 
+async function index_messages(req, res) {
+    try {
+        console.log(pillarModel)
+        const pillar = await pillarModel.findByPk(req.params.id);
+        const messages = await pillar.getPillar_messages()
+        res.json(messages);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    };
+};
+
+async function create_message(req, res) {
+    try {
+        if (!req.body.message || !req.body.score_limit) {
+            return res.status(400).json({ message: 'Error 400: Bad Request' });
+        }
+        const pillar = await pillarModel.findByPk(req.params.id);
+        const new_message = await pillar.createPillar_message(req.body)
+        res.json(new_message);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    };
+};
+
+async function update_message(req, res) {
+    try {
+        if (req.body.message == '') {
+            return res.status(400).json({ message: 'Error 400: Bad Request' });
+        }
+        const message = await PillarMessage.findByPk(req.params.msg_id);
+        if (!message) { return res.status(404).json({ message: 'Error 404: Message not found' }) }
+        if (message.pillar_id == req.params.id) {
+            message.update(req.body);
+            res.status(204).end();
+        } else {
+            res.status(400).json({ message: 'Error 400: Bad Request' });
+        };
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    };
+};
+
+async function destroy_message(req, res) {
+    try {
+        const message = await PillarMessage.findByPk(req.params.msg_id);
+        if (!message) { return res.status(404).json({ message: 'Error 404: Message not found' }) }
+        if (message.pillar_id == req.params.id) {
+            message.destroy();
+            res.status(204).end();
+        } else {
+            res.status(400).json({ message: 'Error 400: Bad Request' });
+        };
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    };
+};
 
 export default {
     create,
     readAll,
     read,
     update,
-    destroy
+    destroy,
+    index_messages,
+    create_message,
+    update_message,
+    destroy_message
 }
