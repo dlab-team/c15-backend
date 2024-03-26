@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import models from "../models/index.js";
 const { User, InvalidToken } = models;
+import transporter from '../../mail.js';
+import html_template from '../../mail_template.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -58,11 +60,24 @@ async function recovery_email(req, res) {
         process.env.JWT_SECRET,
         { expiresIn: '3m' }
       );
-      res.status(201).json({
-        // this should go in an email
-        recovery_token
-      });
-      // res.status(204).end();
+
+      const mail = {
+        from: process.env.MAIL_USER,
+        to: user.email,
+        subject: 'Recupera tu cuenta',
+        text: recovery_token,
+        html: html_template(recovery_token)
+      }
+
+      transporter.sendMail(mail, (err, info) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log("Recovery mail sent successfully. ID: %s", info.messageId);
+      })
+
+      res.status(204).end();
     } else {
       res.status(404).json({ message: 'Error 404: User not found' });
     };
