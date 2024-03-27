@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('pillar_messages', [
       //Tributario
       {
-        score_limit: 20.0, message: "El resultado indica que conocimiento tributario es bastante sólido. Estás al tanto de las complejidades" +
+        score_limit: 20.0, message: "El resultado indica que el conocimiento tributario es bastante sólido. Estás al tanto de las complejidades" +
           " fiscales, por lo que has logrado optimizar la carga asociada para aprovechar al máximo las disposiciones" +
           " legales vigentes.", pillar_id: 1
       },

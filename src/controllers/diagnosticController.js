@@ -2,15 +2,15 @@ import models from "../models/index.js";
 import utils from "./helper/utils.js";
 import optionController from "./optionController.js";
 
-const { Diagnostic, Answer, Pillar, PillarDiagnostic } = models;
+const { User, Diagnostic, Answer, Pillar, PillarDiagnostic } = models;
 
-async function _getAllDiagnosticByCompany(req, res) {
+async function _getDiagnosticByCompany(req, res) {
   try {
 
     if (!utils.isValid(req.params.id)) {
       return res.status(400).json({ success: false, message: 'Required ID is missing, null or undefined' });
     }
-    const diagnosticData = await findAllByCompanyId(req.params.id);
+    const diagnosticData = await _findOneByCompanyId(req.params.id);
 
     if (!utils.hasData(diagnosticData)) {
       return res.status(404).json({ success: false, message: 'Diagnostic not found by Company ID' });
@@ -30,37 +30,53 @@ async function _getAllDiagnosticByCompany(req, res) {
   }
 }
 
-async function _getPillarDiagnosticData(diagnosticData, res) {
-  let pillarDiagnosticData = [];
-  for (const diagnosis of diagnosticData) {
-    try {
-      //Search the Pillar Diagnostic log by Diagnostic id
-      const diagnosticPillar = await PillarDiagnostic.findOne({
-        where: {
-          diagnostic_id: diagnosis.id
-        }
-      });
+async function _findOneByCompanyId(companyID, res) {
 
-      if (diagnosticPillar) {
-        // Check if a record with the same ID already exists in pillarDiagnosticData
-        const existingIndex = pillarDiagnosticData.findIndex(item => item.pillar_id === diagnosticPillar.pillar_id);
-        if (existingIndex !== -1) {
-          // If exists, compare the IDs and replace if the new one is greater
-          if (pillarDiagnosticData[existingIndex].id < diagnosticPillar.id) {
-            pillarDiagnosticData.splice(existingIndex, 1);
-            pillarDiagnosticData.push(diagnosticPillar);
-          }
-        } else {
-          pillarDiagnosticData.push(diagnosticPillar);
-        }
+  try {
 
-      } else
-        return res.status(404).json({ success: false, message: "Null Point by Id pillar diagnostic" });
-    } catch (error) {
-      return error;
+    if (!utils.isValid(companyID)) {
+      return res.status(404).json({ success: false, message: 'Required company Id is missing' });
     }
+
+    if (!Number.isInteger(parseInt(companyID))) {
+      return res.status(400).json({ success: false, message: "The parameter is not a valid id" });
+    }
+
+    const diagnosis = await Diagnostic.findOne({
+      where: { company_id: companyID },
+      order: [['createdAt', 'DESC']]
+    });
+
+    if (!diagnosis) {
+      return res.status(404).json({ success: false, message: 'Diagnostic not found' });
+    }
+    return diagnosis;
+
+  } catch (error) {
+    return error;
   }
-  return pillarDiagnosticData;
+}
+
+async function _getPillarDiagnosticData(diagnosticData, res) {
+
+  try {
+    //Search the all Pillar Diagnostic log by Diagnostic id
+    const pillarDiagnostic = await PillarDiagnostic.findAll({
+      where: {
+        diagnostic_id: diagnosticData.id
+      }
+    });
+    if (pillarDiagnostic) {
+
+      return pillarDiagnostic;
+
+    } else {
+      return res.status(404).json({ success: false, message: "Null Point by Id pillar diagnostic" });
+    }
+
+  } catch (error) {
+    return error;
+  }
 }
 
 async function _getDiagnosisMetaData(pillarDiagnosticData, res) {
@@ -101,36 +117,9 @@ async function _getDiagnosisMetaData(pillarDiagnosticData, res) {
   return diagnosisMetaData;
 }
 
-async function findAllByCompanyId(companyID, res) {
-
-  try {
-
-    if (!utils.isValid(companyID)) {
-      return res.status(404).json({ success: false, message: 'Required company Id is missing' });
-    }
-
-    let pillarCount = await Pillar.count();
-
-    if (!utils.hasData(pillarCount)) {
-      pillarCount = 6;
-    }
-    const diagnosis = await Diagnostic.findAll({
-      where: { company_id: companyID },
-      order: [['createdAt', 'DESC']],
-      limit: pillarCount
-    });
-
-    if (!diagnosis) {
-      return res.status(404).json({ success: false, message: 'Diagnostic not found' });
-    }
-    return diagnosis;
-
-  } catch (error) {
-    return error;
-  }
-}
-
 async function create(req, res) {
+
+  console.log("Entré al método");
   //Transaction: in case of any problem the data will not be persisted in the database
   const newTransaction = await models.database.transaction();
   try {
@@ -154,6 +143,12 @@ async function create(req, res) {
       return res.status(400).json({ success: false, message: 'Required Answers group is missing' });
     }
 
+    const diagnosis = await Diagnostic.create({
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      company_id: companyID
+    }, { transaction: newTransaction });
+
     for (const metaQuestion of requestBody) {
 
       if (!utils.hasData(metaQuestion.options)) {
@@ -176,10 +171,20 @@ async function create(req, res) {
       for (const answer of metaQuestion.options) {
 
         if (!utils.isValid(answer.option_id)) {
+
           errorOcurred = true;
           res.status(400).json({ success: false, message: 'Required Option Id is missing' });
+
+        } else {
+          const option_id = parseInt(answer.option_id);
+
+          if (!Number.isInteger(option_id)) {
+            errorOcurred = true;
+            res.status(400).json({ success: false, message: "Option ID isn't an integer" });
+          }
         }
         if (!errorOcurred) {
+          console.log();
           const option = await optionController.getOptionById(answer.option_id, res);
           sumScore += option.score;
         }
@@ -190,14 +195,7 @@ async function create(req, res) {
         scorePercentage = ((sumScore * 100) / 30).toFixed(1);
       }
 
-
       if (!errorOcurred) {
-
-        const diagnosis = await Diagnostic.create({
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          company_id: companyID
-        }, { transaction: newTransaction });
 
         const answersData = metaQuestion.options.map(element => ({
           diagnostic_id: diagnosis.id,
@@ -229,11 +227,82 @@ async function create(req, res) {
 }
 
 async function read(req, res) {
+
+  try {
+
+    if (!utils.isValid(req.params.id)) {
+      return res.status(400).json({ success: false, message: 'Required ID is missing, null or undefined' });
+    }
+    const diagnosticID = parseInt(req.params.id);
+
+    if (!Number.isInteger(diagnosticID)) {
+      return res.status(400).json({ success: false, message: "The parameter is not a valid id" });
+    }
+ 
+      const diagnosticData = await Diagnostic.findOne({
+         attributes: ['id', 'createdAt'],
+         where: { id: diagnosticID}
+        });
+
+    if (!utils.hasData(diagnosticData)) {
+      return res.status(404).json({ success: false, message: 'Diagnostic not found by Company ID' });
+    }
+
+    const pillarDiagnosticData = await _getPillarDiagnosticData(diagnosticData, res);
+
+    if (!utils.hasData(pillarDiagnosticData)) {
+      return res.status(404).json({ success: false, message: 'Pillar Diagnostic not found' });
+    }
+    const diagnosisMetaData = await _getDiagnosisMetaData(pillarDiagnosticData, res);
+    
+    let diagnosticResult = [];
+    try {
+
+
+      let prevMessage = { score_limit: 0.0 };
+      //Determines the message to display based on the position of the score 
+      //between the score_limit values
+      for (const metaData of diagnosisMetaData) {
+        let messageToDisplay = "";
+
+        const maxScoreLimit = metaData.description[metaData.description.length - 1].score_limit;
+
+        const scoreQuestion = ((metaData.value * maxScoreLimit) / 100).toFixed(1);
+
+        for (const objectDiagnosis of metaData.description) {
+
+          if (scoreQuestion >= prevMessage.score_limit && scoreQuestion <= objectDiagnosis.score_limit) {
+
+            messageToDisplay = objectDiagnosis.message;
+            prevMessage = { score_limit: 0.0 };
+            break;
+          }
+          prevMessage = objectDiagnosis;
+        }
+        diagnosticResult.push({
+          ...metaData,
+          description: messageToDisplay
+        });
+      }
+
+      diagnosticResult.additionalInfo={"createdAt": diagnosticData.createdAt};
+      
+    } catch (error) {
+      return res.status(404).json({ success: false, message: `A problem gestting diagnosis: ` + error });
+    }
+    res.json(diagnosticResult);
+
+  } catch (error) {
+    return error;
+  }
+}
+
+async function readLastDiagnosticByCompanyId(req, res) {
   try {
     let diagnosticResult = [];
     try {
 
-      const diagnosticData = await _getAllDiagnosticByCompany(req, res);
+      const diagnosticData = await _getDiagnosticByCompany(req, res);
 
       let prevMessage = { score_limit: 0.0 };
       //Determines the message to display based on the position of the score 
@@ -271,8 +340,128 @@ async function read(req, res) {
   }
 }
 
+async function readAllByAllUsers(req, res) {
+  try {    
+    const users = await User.findAll({
+      attributes: ['id', 'first_name', 'email', [ models.database.literal('COALESCE("User"."active", false)'), 'active']],
+      include: [{
+        model: models.Company,
+        required: true,
+       attributes: ['id', 'name'],
+        include: [{
+          model: models.Diagnostic,
+          required: true,
+          attributes: ['id', 'createdAt'],
+      }]
+    }],
+    order:[
+      ['first_name','ASC']
+    ]   
+    });
+
+    if (!utils.hasData(users)) {
+      return res.status(404).json({ success: false, message: 'Diagnostic by users not found' });
+    }
+
+    res.json(users);
+
+  } catch (error) {
+    return error;
+  }
+}
+
+async function readAllByUserId(req, res){
+  try {    
+
+    const userId= req.params.id;
+
+    if (!utils.isValid(userId)) {
+      return res.status(404).json({ success: false, message: 'Required user Id is missing' });
+    }
+
+    if (!Number.isInteger(parseInt(userId))) {
+      return res.status(400).json({ success: false, message: "The parameter is not a valid id" });
+    }
+
+    const users = await User.findAll({
+      //attributes: ['id', 'first_name', 'email', [models.database.literal('COALESCE("User"."active", false)'), 'active']],
+      attributes:[],
+      where: { id: userId },
+      include: [{
+        model: models.Company,
+        required: true,
+        attributes: ['id', 'name'],
+        include: [{
+          model: models.Diagnostic,
+          required: true,
+          attributes: ['id', 'createdAt'],
+          order: models.database.literal('"createdAt" DESC')
+        }],     
+      }],
+  
+    });
+
+    if (!utils.hasData(users)) {
+      return res.status(404).json({ success: false, message: 'Diagnostic by user not found' });
+    }
+
+    res.json(users);
+
+  } catch (error) {
+    return error;
+  }
+}
+
+async function readAllByCompanyId(req, res){
+  try {    
+
+    const userId= req.params.id;
+
+    if (!utils.isValid(userId)) {
+      return res.status(404).json({ success: false, message: 'Required user Id is missing' });
+    }
+
+    if (!Number.isInteger(parseInt(userId))) {
+      return res.status(400).json({ success: false, message: "The parameter is not a valid id" });
+    }
+
+    const users = await User.findAll({
+      attributes: ['id', 'first_name', 'email', [models.database.literal('COALESCE("User"."active", false)'), 'active']],
+      where: { id: userId },
+      include: [{
+        model: models.Company,
+        required: true,
+        attributes: ['id', 'name'],
+        include: [{
+          model: models.Diagnostic,
+          required: true,
+          attributes: ['id', 'createdAt'],
+        
+        }],
+       
+      }],
+      order: [
+        ['createdAt', 'DESC']
+      ]
+    });
+
+    if (!utils.hasData(users)) {
+      return res.status(404).json({ success: false, message: 'Diagnostic by user not found' });
+    }
+
+    res.json(users);
+
+  } catch (error) {
+    return error;
+  }
+}
+
 export default {
-  findAllByCompanyId,
-  create, read
+  create, 
+  read, 
+  readLastDiagnosticByCompanyId, 
+  readAllByAllUsers,
+  readAllByUserId,
+  readAllByCompanyId
 };
 
