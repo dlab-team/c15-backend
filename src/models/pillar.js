@@ -5,7 +5,13 @@ export default (database)=>{
         name:{
             type:DataTypes.STRING,
             allowNull:false
+        },
+        active: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
         }
     }, {tableName:'pillars',timestamps: false});
 return Pillar;
 }
+
