@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon app.js",
-    "db:sync": "node src/build/db_sync.js"
+    "db:sync": "node src/build/db_sync.js",
+    "db:reset": "sequelize db:drop && sequelize db:create && npm run db:sync && sequelize db:seed:all"
   },
   "repository": {
     "type": "git",
