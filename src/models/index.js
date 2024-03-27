@@ -2,7 +2,6 @@ import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Importar modelos
 import userModel from "./user.js";
 import questionModel from './question.js';
 import pillarModel from './pillar.js';
@@ -37,18 +36,8 @@ const models = {
   InvalidToken: invalidTokenModel(database)
 };
 
-// Crear asociaciones
 import associations from './associations.js';
 associations(models);
-
-// Sincronizar base de datos
-await database.sync()
-    .then(() => {
-    console.log("Database synchronized successfully");
-    })
-    .catch((err) => {
-    console.log("Failed to sync db: " + err);
-    });
 
 models.database = database;
 export default models;
