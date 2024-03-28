@@ -1,5 +1,6 @@
+const WEB_URL = process.env.WEB_URL;
 const html_template = (text) => {
-    return `
+  return `
         <!DOCTYPE html>
         <html>
             <head>
@@ -7,10 +8,12 @@ const html_template = (text) => {
                 <title>NodeMailer Email Template</title>
             </head>
             <body>
-                <p>${text}</p>
+                <p>Bienvenido:</p>
+                <p>Puedes acceder al siguiente link para activar tu cuenta:</p><div><div>
+                <a href='${WEB_URL}ActivarCuenta?token=${text}'>Activa tu cuenta</a>
             </body>
         </html>
     `;
-}
+};
 
 export default html_template;
