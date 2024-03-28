@@ -67,7 +67,7 @@ async function create(req, res) {
     const mail = {
       from: process.env.MAIL_USER,
       to: newUser.email,
-      subject: 'Activa tu cuenta',
+      subject: 'Bienvenido! Activa tu cuenta',
       text: token,
       html: html_template(token)
     }
